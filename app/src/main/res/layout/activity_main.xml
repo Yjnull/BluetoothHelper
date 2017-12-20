@@ -21,6 +21,19 @@
         android:id="@+id/btn_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="发送指令"/>
+        android:layout_marginBottom="12dp"
+        android:text="取消链接"/>
+
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+    </ListView>
+
+    <TextView
+        android:id="@+id/ble_response"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

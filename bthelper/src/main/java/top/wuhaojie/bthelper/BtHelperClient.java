@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
@@ -39,6 +40,7 @@ public class BtHelperClient {
     private static final int HANDLER_WHAT_NEW_RESPONSE = 2;
 
     private static final int DEFAULT_BUFFER_SIZE = 256;
+    private static final int DEFAULT_BUFFER_STREAM_SIZE = 1024;
 
     private Context mContext;
     private BluetoothSocket mSocket;
@@ -355,15 +357,25 @@ public class BtHelperClient {
                     byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
                     StringBuilder builder = new StringBuilder();
 
+                    byte[] bufferY = new byte[DEFAULT_BUFFER_SIZE];
+                    int bytes;
+
                     while (mInputStream.available() == 0) ;
 
                     while (true) {
-                        int num = mInputStream.read(buffer);
+                        /*int num = mInputStream.read(buffer);
                         String s = new String(buffer, 0, num);
-                        builder.append(s);
+                        builder.append(s);*/
+                        bytes = mInputStream.read(bufferY);
+                        /*char[] readBufferToChar = new char[256];
+                        for (int i = 0; i < bytes; i++) {
+                            readBufferToChar[i] = (char) bufferY[i];
+                        }*/
+                        builder.append(bytesToHexString(bufferY));
                         if (mInputStream.available() == 0) break;
 
                     }
+
                     String s = builder.toString().trim();
                     if (mFilter != null) {
                         if (mFilter.isCorrect(s)) {
@@ -389,6 +401,18 @@ public class BtHelperClient {
             }
 
         }
+    }
+
+    public static final String bytesToHexString(byte[] bArray) {
+        StringBuffer sb = new StringBuffer(bArray.length);
+        String sTemp;
+        for (int i = 0; i < bArray.length; i++) {
+            sTemp = Integer.toHexString(0xFF & bArray[i]);
+            if (sTemp.length() < 2)
+                sb.append(0);
+            sb.append(sTemp.toUpperCase());
+        }
+        return sb.toString();
     }
 
 
